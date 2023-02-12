@@ -6,9 +6,6 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import os
 
-MOVE_MS = 2000
-DEPTH = 100
-
 engine = popen_engine('stockfish.exe')
 engine.uci()
 
@@ -17,8 +14,8 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-methods = dir(engine)
-print(methods)
+#methods = dir(engine)
+#print(methods)
 
 @app.route('/best', methods=['GET'])
 @cross_origin()
@@ -41,15 +38,30 @@ def make_move():
     #print(methods)
     
     #retrives the elo from the parameters
-    elo = request.args.get('elo')
+    difficulty = int(request.args.get('difficulty'))
 
     #sets the elo to the engine
-    engine.setoption({"UCI_LimitStrength": True})
-    engine.setoption({"UCI_Elo": "2850"})
-        
+    #engine.setoption({"UCI_LimitStrength": True})
+    #engine.setoption({"UCI_Elo": "2850"})
+    move_ms = 300
+    depth = 40    
+
+    if difficulty == 0:
+        move_ms = 200
+        depth = 10
+    elif difficulty == 1:
+        move_ms = 1000
+        depth = 40
+    elif difficulty == 2:
+        move_ms = 3000
+        depth = 100
+
     #get the best move
-    best_move = engine.go(movetime=MOVE_MS, depth=DEPTH)[0]
+    best_move = engine.go(movetime=move_ms, depth=depth)[0]
     board.push(best_move)
+
+    print('move_ms',move_ms)
+    print('depth',depth)
 
     best_move_uci = best_move.uci()
     best_move_from = best_move_uci[:2]
@@ -73,4 +85,4 @@ def make_move():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8000))
-    app.run(port=port, host='0.0.0.0')
+    app.run(port=port)
