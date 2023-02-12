@@ -48,7 +48,7 @@ def make_move():
 
     if difficulty == 0:
         move_ms = 200
-        depth = 10
+        depth = 5
     elif difficulty == 1:
         move_ms = 1000
         depth = 40
