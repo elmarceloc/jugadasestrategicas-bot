@@ -6,7 +6,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import os
 
-engine = popen_engine('stockfish.exe')
+engine = popen_engine('stockfish_10_x64')
 engine.uci()
 
 app = Flask(__name__)
