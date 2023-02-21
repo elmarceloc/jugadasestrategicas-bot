@@ -5,7 +5,11 @@ from chess.uci import popen_engine, InfoHandler
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import os
+import subprocess
 
+proc = subprocess.Popen("./hello")
+proc.wait()
+    
 engine = popen_engine('./stockfish_10_x64')
 engine.uci()
 
@@ -13,6 +17,7 @@ app = Flask(__name__)
 
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 #methods = dir(engine)
 #print(methods)
